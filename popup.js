@@ -3,6 +3,7 @@ let allImages = [];
 let filteredImages = [];
 let selectedImages = new Set();
 let activeTabId = null;
+let activeTabTitle = 'ImageGrabber';
 
 // UI Elements
 const rightClickToggle = document.getElementById('rightClickToggle');
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
   activeTabId = tab.id;
+  activeTabTitle = tab.title || 'ImageGrabber';
 
   // Restrict running on chrome:// pages
   if (tab.url.startsWith('chrome://') || tab.url.startsWith('edge://') || tab.url.startsWith('about:')) {
@@ -382,7 +384,8 @@ function triggerDownload(url, filename) {
   chrome.runtime.sendMessage({
     action: 'downloadImage',
     url: url,
-    filename: filename
+    filename: filename,
+    pageTitle: activeTabTitle
   }, (response) => {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);

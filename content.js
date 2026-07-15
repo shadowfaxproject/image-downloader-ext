@@ -163,14 +163,16 @@ function getCleanFilename(url) {
 }
 
 // -------------------------------------------------------------
-// Ctrl+D / Cmd+D Hover Download Shortcut Feature
+// Customizable Hover & Active Slide Download Shortcut Feature
 // -------------------------------------------------------------
 
-let currentHoveredElement = null;
+let lastMouseX = 0;
+let lastMouseY = 0;
 
-// Track the element currently under the mouse pointer
+// Track mouse coordinates
 document.addEventListener('mousemove', (e) => {
-  currentHoveredElement = e.target;
+  lastMouseX = e.clientX;
+  lastMouseY = e.clientY;
 });
 
 // Helper to find image URL from an element (handles overlays, backgrounds, and children)
@@ -310,6 +312,49 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
+// Helper to detect active slide/gallery image or default to largest visible image
+function findActiveOrLargestImage() {
+  const activeSelectors = [
+    '.active img', '.current img', '.selected img', '.visible img',
+    'img.active', 'img.current', 'img.selected', 'img.visible',
+    '.swiper-slide-active img', '.slick-active img', '.active .bg-image',
+    '[aria-hidden="false"] img'
+  ];
+  
+  for (const selector of activeSelectors) {
+    try {
+      const el = document.querySelector(selector);
+      if (el) {
+        const url = el.tagName === 'IMG' ? el.src : findImageFromElement(el);
+        if (url) return url;
+      }
+    } catch (e) {}
+  }
+
+  // Fallback: Find the largest visible image on screen
+  const imgs = document.querySelectorAll('img');
+  let largestImgUrl = null;
+  let maxArea = 0;
+  
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  
+  imgs.forEach(img => {
+    try {
+      const rect = img.getBoundingClientRect();
+      if (rect.bottom > 0 && rect.right > 0 && rect.top < vh && rect.left < vw) {
+        const area = rect.width * rect.height;
+        if (area > maxArea && area > 10000) { // Ignore small layout icons
+          maxArea = area;
+          largestImgUrl = img.src;
+        }
+      }
+    } catch (e) {}
+  });
+
+  return largestImgUrl;
+}
+
 // Global hotkey listener
 document.addEventListener('keydown', (e) => {
   // Validate modifier key
@@ -324,7 +369,18 @@ document.addEventListener('keydown', (e) => {
   const keyMatch = e.key.toLowerCase() === shortcutKey.toLowerCase();
 
   if (modifierMatch && keyMatch) {
-    const imageUrl = findImageFromElement(currentHoveredElement);
+    let imageUrl = null;
+
+    // 1. Try resolving image directly under current mouse pointer coordinates
+    if (lastMouseX > 0 || lastMouseY > 0) {
+      const el = document.elementFromPoint(lastMouseX, lastMouseY);
+      imageUrl = findImageFromElement(el);
+    }
+
+    // 2. Fallback to active slides/gallery or largest viewport image if mouse is not over an image
+    if (!imageUrl) {
+      imageUrl = findActiveOrLargestImage();
+    }
     
     if (imageUrl) {
       e.preventDefault(); // Prevent default browser actions
@@ -335,7 +391,8 @@ document.addEventListener('keydown', (e) => {
       chrome.runtime.sendMessage({
         action: 'downloadImage',
         url: imageUrl,
-        filename: filename
+        filename: filename,
+        pageTitle: document.title
       }, (response) => {
         if (response && response.success) {
           showDownloadIndicator(imageUrl);
