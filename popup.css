@@ -589,3 +589,110 @@ input:checked + .slider:before {
   color: #94a3b8;
   margin-top: 2px;
 }
+
+/* Collapsible Settings Panel CSS styling */
+.settings-toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: 6px;
+  transition: transform 0.25s ease;
+  outline: none;
+  line-height: 1;
+}
+
+.settings-toggle-btn:hover {
+  transform: rotate(45deg);
+}
+
+.settings-panel {
+  padding: 12px 20px;
+  background-color: #0b0f17;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  animation: panelSlide 0.25s ease-out;
+}
+
+@keyframes panelSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #00d2ff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-row label {
+  font-size: 11px;
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+.shortcut-pickers {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mini-select {
+  width: 105px;
+  position: relative;
+}
+
+.mini-select-key {
+  width: 50px;
+  position: relative;
+}
+
+.mini-select select, .mini-select-key select {
+  width: 100%;
+  padding: 6px 10px;
+  background-color: #121824;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: #e2e8f0;
+  font-size: 10px;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mini-select select:focus, .mini-select-key select:focus {
+  border-color: #00d2ff;
+}
+
+.mini-select::after, .mini-select-key::after {
+  content: "▾";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+  font-size: 8px;
+}
+
+.plus-sign {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: bold;
+}

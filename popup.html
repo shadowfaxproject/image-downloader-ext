@@ -23,8 +23,59 @@
           <input type="checkbox" id="rightClickToggle">
           <span class="slider round"></span>
         </label>
+        <button id="settingsToggleBtn" class="settings-toggle-btn" title="Settings">⚙️</button>
       </div>
     </header>
+
+    <!-- Collapsible Settings Panel -->
+    <section id="settingsPanel" class="settings-panel hidden">
+      <div class="settings-title">Extension Settings</div>
+      <div class="settings-row">
+        <label for="modifierSelect">Hover Download Shortcut:</label>
+        <div class="shortcut-pickers">
+          <div class="select-wrapper mini-select">
+            <select id="modifierSelect">
+              <option value="alt">Option / Alt</option>
+              <option value="ctrl">Ctrl</option>
+              <option value="shift">Shift</option>
+              <option value="meta">Cmd / Win</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+          <span class="plus-sign">+</span>
+          <div class="select-wrapper mini-select-key">
+            <select id="keySelect">
+              <option value="a">A</option>
+              <option value="b">B</option>
+              <option value="c">C</option>
+              <option value="d">D</option>
+              <option value="e">E</option>
+              <option value="f">F</option>
+              <option value="g">G</option>
+              <option value="h">H</option>
+              <option value="i">I</option>
+              <option value="j">J</option>
+              <option value="k">K</option>
+              <option value="l">L</option>
+              <option value="m">M</option>
+              <option value="n">N</option>
+              <option value="o">O</option>
+              <option value="p">P</option>
+              <option value="q">Q</option>
+              <option value="r">R</option>
+              <option value="s">S</option>
+              <option value="t">T</option>
+              <option value="u">U</option>
+              <option value="v">V</option>
+              <option value="w">W</option>
+              <option value="x">X</option>
+              <option value="y">Y</option>
+              <option value="z">Z</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Toolbar / Filters -->
     <section class="toolbar">

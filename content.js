@@ -292,14 +292,42 @@ function showDownloadIndicator(url) {
   }, 2200);
 }
 
+// Global hotkey parameters
+let shortcutModifier = 'alt'; // default
+let shortcutKey = 'p';       // default
+
+// Load configured hotkey settings
+chrome.storage.local.get(['shortcutModifier', 'shortcutKey'], (result) => {
+  if (result.shortcutModifier !== undefined) shortcutModifier = result.shortcutModifier;
+  if (result.shortcutKey !== undefined) shortcutKey = result.shortcutKey;
+});
+
+// Update hotkey settings in real time on storage changes
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local') {
+    if (changes.shortcutModifier) shortcutModifier = changes.shortcutModifier.newValue;
+    if (changes.shortcutKey) shortcutKey = changes.shortcutKey.newValue;
+  }
+});
+
 // Global hotkey listener
 document.addEventListener('keydown', (e) => {
-  // Catch Ctrl+D (or Cmd+D on Mac)
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
+  // Validate modifier key
+  let modifierMatch = false;
+  if (shortcutModifier === 'alt' && e.altKey) modifierMatch = true;
+  else if (shortcutModifier === 'ctrl' && e.ctrlKey) modifierMatch = true;
+  else if (shortcutModifier === 'shift' && e.shiftKey) modifierMatch = true;
+  else if (shortcutModifier === 'meta' && e.metaKey) modifierMatch = true;
+  else if (shortcutModifier === 'none' && !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) modifierMatch = true;
+
+  // Validate character key
+  const keyMatch = e.key.toLowerCase() === shortcutKey.toLowerCase();
+
+  if (modifierMatch && keyMatch) {
     const imageUrl = findImageFromElement(currentHoveredElement);
     
     if (imageUrl) {
-      e.preventDefault(); // Stop native Chrome bookmark page dialog
+      e.preventDefault(); // Prevent default browser actions
       
       const filename = getCleanFilename(imageUrl);
       

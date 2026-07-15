@@ -16,6 +16,10 @@ const selectCount = document.getElementById('selectCount');
 const imageGrid = document.getElementById('imageGrid');
 const loadingState = document.getElementById('loadingState');
 const emptyState = document.getElementById('emptyState');
+const settingsToggleBtn = document.getElementById('settingsToggleBtn');
+const settingsPanel = document.getElementById('settingsPanel');
+const modifierSelect = document.getElementById('modifierSelect');
+const keySelect = document.getElementById('keySelect');
 
 // Modal Elements
 const previewModal = document.getElementById('previewModal');
@@ -43,8 +47,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // 2. Load and apply right-click unblocker toggle state
-  chrome.storage.local.get(['forceRightClick'], (result) => {
+  chrome.storage.local.get(['forceRightClick', 'shortcutModifier', 'shortcutKey'], (result) => {
     rightClickToggle.checked = !!result.forceRightClick;
+    
+    // Set custom shortcut selections
+    if (result.shortcutModifier !== undefined) {
+      modifierSelect.value = result.shortcutModifier;
+    } else {
+      modifierSelect.value = 'alt'; // default
+    }
+    
+    if (result.shortcutKey !== undefined) {
+      keySelect.value = result.shortcutKey;
+    } else {
+      keySelect.value = 'p'; // default
+    }
   });
 
   // 3. Scan page for images
@@ -73,6 +90,21 @@ function setupEventListeners() {
         });
       }
     });
+  });
+
+  // Toggle settings drawer
+  settingsToggleBtn.addEventListener('click', () => {
+    settingsPanel.classList.toggle('hidden');
+  });
+
+  // Shortcut Modifier Change
+  modifierSelect.addEventListener('change', (e) => {
+    chrome.storage.local.set({ shortcutModifier: e.target.value });
+  });
+
+  // Shortcut Key Change
+  keySelect.addEventListener('change', (e) => {
+    chrome.storage.local.set({ shortcutKey: e.target.value });
   });
 
   // Filters & Search
