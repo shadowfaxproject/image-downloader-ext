@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Grabber & Right-Click Restorer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-area">
+        <div class="logo-icon"></div>
+        <div class="logo-text">
+          <h1>Image Grabber</h1>
+          <p>DOM Extractor & Unblocker</p>
+        </div>
+      </div>
+      <div class="toggle-control">
+        <span class="toggle-label">Unblock Right-Click</span>
+        <label class="switch">
+          <input type="checkbox" id="rightClickToggle">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </header>
+
+    <!-- Toolbar / Filters -->
+    <section class="toolbar">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by name or URL...">
+        <span class="search-icon">🔍</span>
+      </div>
+      <div class="filter-group">
+        <div class="select-wrapper">
+          <select id="sizeFilter">
+            <option value="0">All Sizes</option>
+            <option value="50">&gt; 50px</option>
+            <option value="150">&gt; 150px</option>
+            <option value="300">&gt; 300px</option>
+            <option value="600">&gt; 600px</option>
+          </select>
+        </div>
+        <div class="select-wrapper">
+          <select id="typeFilter">
+            <option value="all">All Formats</option>
+            <option value="jpg">JPG / JPEG</option>
+            <option value="png">PNG</option>
+            <option value="webp">WEBP</option>
+            <option value="svg">SVG</option>
+            <option value="data">Data URLs</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Status & Action Bar -->
+    <section class="action-bar">
+      <div class="status-text" id="statusText">Scanning page...</div>
+      <div class="actions">
+        <button id="selectAllBtn" class="btn btn-secondary">Select All</button>
+        <button id="downloadSelectedBtn" class="btn btn-primary" disabled>
+          Download Selected (<span id="selectCount">0</span>)
+        </button>
+      </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <main class="grid-container">
+      <div id="loadingState" class="loading-state">
+        <div class="spinner"></div>
+        <p>Extracting page assets...</p>
+      </div>
+      
+      <div id="emptyState" class="empty-state hidden">
+        <div class="empty-icon">🖼️</div>
+        <p class="empty-title">No images found</p>
+        <p class="empty-desc">Try scrolling down the page to trigger lazy loading of images, then reopen the extension.</p>
+      </div>
+
+      <div id="imageGrid" class="image-grid hidden"></div>
+    </main>
+  </div>
+
+  <!-- Image Preview Modal -->
+  <div id="previewModal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="Preview">
+      </div>
+      <div class="modal-footer">
+        <div class="modal-info">
+          <div id="modalFilename" class="modal-filename">image.jpg</div>
+          <div id="modalDimensions" class="modal-dims">1920 x 1080</div>
+        </div>
+        <button id="modalDownloadBtn" class="btn btn-primary">Download Image</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

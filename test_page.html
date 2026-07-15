@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Grabber & Right-Click Test Page</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #38bdf8;
+      border-bottom: 2px solid #1e293b;
+      padding-bottom: 10px;
+      margin-bottom: 30px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+    }
+    .card {
+      background-color: #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .card h3 {
+      margin: 0;
+      color: #f1f5f9;
+      font-size: 16px;
+    }
+    .card p {
+      color: #94a3b8;
+      font-size: 13px;
+      margin: 0;
+      line-height: 1.5;
+    }
+    .image-container {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #0f172a;
+      border: 1px solid #475569;
+    }
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* Overlay blocker styling */
+    .overlay-wrapper {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .overlay-blocker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0); /* Invisible overlay */
+      z-index: 10;
+      cursor: not-allowed;
+    }
+
+    /* CSS Background Image Container */
+    .bg-image-container {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      background-image: url('mock_image_1.jpg');
+      background-size: cover;
+      background-position: center;
+      border: 1px solid #475569;
+    }
+
+    .warning-banner {
+      background-color: #7f1d1d;
+      border: 1px solid #b91c1c;
+      color: #fecaca;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Image Grabber & Right-Click Test Site</h1>
+  
+  <div class="warning-banner">
+    ⚠️ <strong>Right-Click Blocked!</strong> A script on this webpage intercepts and prevents right-clicking globally, showing an alert. Use the extension to bypass it!
+  </div>
+
+  <div class="grid">
+    <!-- Case 1: Inline ContextMenu Block -->
+    <div class="card">
+      <h3>1. Image with Inline Block</h3>
+      <p>Right-click is blocked directly on this img element using <code>oncontextmenu="return false;"</code>.</p>
+      <div class="image-container">
+        <img src="mock_image_1.jpg" alt="Vibrant Sunset Landscape" oncontextmenu="return false;">
+      </div>
+    </div>
+
+    <!-- Case 2: Transparent Overlay Block -->
+    <div class="card">
+      <h3>2. Transparent Overlay Blocker</h3>
+      <p>An invisible div is placed directly on top of this image, making it impossible to right-click the image underneath.</p>
+      <div class="overlay-wrapper">
+        <div class="overlay-blocker"></div>
+        <img src="mock_image_2.jpg" alt="Futuristic Neon Studio Workspace" style="width:100%; height:100%; object-fit:cover;">
+      </div>
+    </div>
+
+    <!-- Case 3: CSS Background Image -->
+    <div class="card">
+      <h3>3. CSS Background Image</h3>
+      <p>This image is loaded as a CSS <code>background-image</code> rather than an HTML <code>&lt;img&gt;</code> tag.</p>
+      <div class="bg-image-container"></div>
+    </div>
+  </div>
+
+  <script>
+    // Global webpage right-click preventer
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      alert("Custom Website Message: Right-click has been disabled on this page to protect images.");
+    });
+  </script>
+</body>
+</html>
