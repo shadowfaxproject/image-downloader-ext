@@ -365,8 +365,11 @@ document.addEventListener('keydown', (e) => {
   else if (shortcutModifier === 'meta' && e.metaKey) modifierMatch = true;
   else if (shortcutModifier === 'none' && !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) modifierMatch = true;
 
-  // Validate character key
-  const keyMatch = e.key.toLowerCase() === shortcutKey.toLowerCase();
+  // Validate character key. When Shift is the modifier, punctuation keys report
+  // their shifted character (e.g. Shift+; → e.key===":"), so fall back to e.code.
+  const codeMap = { ';': 'Semicolon', "'": 'Quote', ',': 'Comma', '.': 'Period', '/': 'Slash' };
+  const keyMatch = e.key.toLowerCase() === shortcutKey.toLowerCase() ||
+    (shortcutModifier === 'shift' && codeMap[shortcutKey] === e.code);
 
   if (modifierMatch && keyMatch) {
     let imageUrl = null;
